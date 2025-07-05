@@ -1,4 +1,4 @@
-﻿DI_open_cheat_menu = {
+DI_open_cheat_menu = {
     interface_priority = 300
     category = interaction_category_cheat_menu
     desc = DI_cheat_menu_desc
@@ -5271,3 +5271,73 @@ DI_toggle_menu_button_interaction = {
     }
 }
 
+DI_cheat_offer_confederation_interaction = {
+    category = interaction_category_cheat_menu
+    icon = offer_confederation_interaction
+
+    desc = DI_cheat_offer_confederation_interaction_desc
+
+    popup_on_receive = yes
+    pause_on_receive = yes
+
+    # Only the player can see this interaction
+    is_shown = {
+        scope:actor = { 
+            is_player = yes
+            any_owned_story = {
+                story_type = DI_misc_variables_story
+                has_variable = DI_cheat_menu
+            }
+        }
+    }
+
+    # Always allow player to use it, even if normally invalid
+    is_valid_showing_failures_only = {
+        scope:actor = { is_player = yes }
+    }
+
+    # Disable AI from using this interaction
+    ai_potential = {
+        always = no
+    }
+
+    ai_will_do = {
+        base = 0
+    }
+
+    cost = {
+        prestige = { value = 0 }
+    }
+
+    greeting = positive
+    notification_text = OFFER_CONFEDERATION_INTERACTION_NOTIFICATION
+
+    ai_accept = {
+        base = 1000 # Basically always accept
+    }
+
+    send_option = {
+        is_shown = { always = yes }
+        is_valid = { always = yes }
+    }
+
+    on_accept = {
+        scope:actor = {
+            save_scope_as = confederation_offerer
+        }
+        scope:recipient = {
+            save_scope_as = confederation_accepter
+            offer_confederation_accepter_effect = yes
+        }
+        scope:actor = {
+            custom_tooltip = create_confederation_tt
+            trigger_event = mpo_interactions_events.0001
+        }
+    }
+
+    on_decline = {
+        scope:actor = {
+            trigger_event = mpo_interactions_events.0004
+        }
+    }
+}
